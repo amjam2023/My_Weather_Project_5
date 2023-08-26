@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Weather Plus Project</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM"
+      crossorigin="anonymous"
+    />
+    <style>
+      #toCelsius,
+      #toFahrenheit {
+        cursor: pointer;
+      }
+
+      h5 {
+        margin-left: 10px;
+      }
+
+      .form-control {
+        width: 300px;
+        margin-top: 25px;
+        margin-left: 10px;
+      }
+
+      .grid-container {
+        display: grid;
+        grid-template-rows: auto auto auto;
+        grid-template-columns: auto;
+        gap: 10px;
+        align-items: center;
+      }
+
+      .extra-large {
+        font-size: 80px;
+        font-weight: bold;
+      }
+
+      .weather-icon {
+        width: 100px;
+      }
+
+      .card-text {
+        font-size: 50px;
+        font-weight: bold;
+        color: rgb(39, 60, 153);
+        text-align: center;
+        margin-bottom: 0px;
+      }
+
+      .card-title {
+        display: flex;
+        justify-content: center;
+        margin: auto;
+      }
+
+      .card-img-top {
+        display: block;
+        margin: 0 auto;
+        width: 85px;
+        height: 85px;
+        padding-top: 10px;
+      }
+
+      .card-group {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 0px;
+        justify-content: center;
+        margin-left: 20px;
+      }
+
+      .card {
+        border-color: white;
+      }
+
+      .search-container {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 25px;
+        margin-left: 10px;
+      }
+
+      .col-2 {
+        display: flex;
+        align-items: center;
+        width: auto;
+        gap: 5px;
+      }
+
+      .extra-large {
+        margin-right: 10px;
+      }
+
+      .hidden {
+        display: none;
+      }
+    </style>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  </head>
+  <body>
+    <div class="search-container">
+      <input
+        class="form-control"
+        id="cityInput"
+        placeholder="Type a City name to search 🔍"
+      />
+      <button id="searchButton">Search</button>
+      <button id="localButton">Get Local Weather</button>
+
+    </div>
+ 
+</header>
+<h1 id="main-heading" class="hidden"></h1>
+<div class="container">
+  <div class="grid-container">
+      <div>
+          <h1 id="selectedCity"></h1>
+        </div>
+        <div class="row">
+          <div class="col-2">
+            <h1 class="extra-large hidden" id="temperatureDisplay"></h1>
+            <h1 class="extra-small hidden" id="toFahrenheit">°C</h1>
+            <h1 class="extra-small">┃</h1>
+            <h1 class="extra-small" id="toCelsius">°F</h1>
+          </div>
+          <div class="col-10">
+            <img
+              src="images/mostly_cloudy.png"
+              alt="Weather Icon"
+              class="weather-icon"
+            />
+          </div>
+          <div class="row">
+            <div class="col-2">
+              <p>As of --:-- am/pm EDT</p>
+            </div>
+            <div class="col-10">
+                <p id="weatherDescription" class="hidden"></p>
+                <p id="weatherPrecipitation" class="hidden">Precipitation:</p>
+                <p id="weatherHumidity" class="hidden">Humidity:</p>
+                <p id="weatherWind" class="hidden">Wind:</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr />
+
+    <script>
+        function getCurrentDateTime() {
+            let now = new Date();
+            let hours = now.getHours();
+            let minutes = now.getMinutes();
+            let ampm = hours >= 12 ? "pm" : "am";
+            hours = hours % 12;
+            hours = hours ? hours : 12;
+            minutes = minutes < 10 ? "0" + minutes : minutes;
+            let formattedTime = hours + ":" + minutes + " " + ampm + " EDT";
+            return formattedTime;
+        }
+    
+        function updateCity() {
+            var input = document.getElementById("cityInput");
+            var selectedCity = input.value;
+            document.getElementById("selectedCity").textContent = selectedCity;
+            document.querySelector(".row .col-2 p").textContent = "As of " + getCurrentDateTime();
+            document.getElementById("temperatureDisplay").classList.remove("hidden");
+    
+            getWeather(selectedCity);
+        }
+    
+        function getWeather(city) {
+    let apiKey = "eb9542c65e739e0fb25ade97c749e2aa";
+    let apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+    axios.get(apiUrl).then(showWeather);
+        }
+    
+        function showWeather(response) {
+    let tempCelsius = Math.round(response.data.main.temp);
+    let tempFahrenheit = Math.round(tempCelsius * 9/5 + 32);
+
+    document.querySelector("#selectedCity").innerHTML = response.data.name;
+
+    let tempDisplay = document.getElementById("temperatureDisplay");
+    tempDisplay.textContent = `${tempCelsius}`;   // Set to Celsius by default
+    tempDisplay.classList.remove("hidden");
+
+    document.getElementById("toCelsius").classList.add("hidden");
+    document.getElementById("toFahrenheit").classList.remove("hidden");
+
+    // Get the weather description from the API response
+    let weatherDescription = response.data.weather[0].main;
+
+    let weatherDescriptionElement = document.getElementById("weatherDescription");
+    weatherDescriptionElement.textContent = response.data.weather[0].main;
+    weatherDescriptionElement.classList.remove("hidden");
+
+    document.getElementById("toCelsius").classList.add("hidden");
+    document.getElementById("toFahrenheit").classList.remove("hidden");
+
+    let precipitation = response.data.rain ? (response.data.rain["1h"] || response.data.rain["3h"]) : "0";
+    let humidity = response.data.main.humidity;
+    let windSpeed = response.data.wind.speed;
+
+    document.getElementById("weatherPrecipitation").textContent = `Precipitation: ${precipitation} mm`;
+    document.getElementById("weatherPrecipitation").classList.remove("hidden");
+
+    document.getElementById("weatherHumidity").textContent = `Humidity: ${humidity}%`;
+    document.getElementById("weatherHumidity").classList.remove("hidden");
+
+    document.getElementById("weatherWind").textContent = `Wind: ${windSpeed} m/s`;
+    document.getElementById("weatherWind").classList.remove("hidden");
+}
+
+
+function showPosition(position) {
+        console.log(position.coords.latitude, position.coords.longitude);
+        getWeather(position.coords.latitude, position.coords.longitude); // Call getWeather with the latitude and longitude
+      }
+
+      function getLocalWeather(latitude = null, longitude = null) {
+    if(latitude === null || longitude === null) {
+        if(navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                getLocalWeather(position.coords.latitude, position.coords.longitude);
+            });
+            return;
+        } else {
+            alert("Geolocation is not supported by this browser.");
+            return;
+        }
+    }
+
+    let apiKey = "eb9542c65e739e0fb25ade97c749e2aa";
+    let apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=metric`;
+    axios.get(apiUrl).then(function (response) {
+        let localTempCelsius = Math.round(response.data.main.temp);
+        let localTempFahrenheit = Math.round(localTempCelsius * 9/5 + 32); // Convert Celsius to Fahrenheit
+        let localCityName = response.data.name;
+
+        let mainHeading = document.querySelector("#main-heading");
+        mainHeading.innerHTML = `It is ${localTempFahrenheit}°F (${localTempCelsius}°C) in ${localCityName}`;
+        mainHeading.classList.remove("hidden");  
+    });
+}
+
+
+
+      navigator.geolocation.getCurrentPosition(showPosition);
+    
+      document.getElementById("localButton").addEventListener("click", function() {
+    getLocalWeather();
+  });
+      
+  document.getElementById("searchButton").addEventListener("click", updateCity);
+    
+        document.getElementById("toCelsius").addEventListener("click", function() {
+    let currentTemp = parseInt(document.getElementById("temperatureDisplay").textContent);
+    let celsiusTemp = Math.round((currentTemp - 32) * 5/9);
+    document.getElementById("temperatureDisplay").textContent = `${celsiusTemp}`;
+    
+    document.getElementById("toFahrenheit").classList.remove("hidden");
+    document.getElementById("toCelsius").classList.add("hidden");      
+});
+
+document.getElementById("toFahrenheit").addEventListener("click", function() {
+    let currentTemp = parseInt(document.getElementById("temperatureDisplay").textContent);
+    let fahrenheitTemp = Math.round(currentTemp * 9/5 + 32);
+    document.getElementById("temperatureDisplay").textContent = `${fahrenheitTemp}`;
+    
+    document.getElementById("toCelsius").classList.remove("hidden");  
+    document.getElementById("toFahrenheit").classList.add("hidden");  
+});
+
+document.getElementById("cityInput").addEventListener("keyup", function(event) {
+    if (event.key === "Enter") {
+        updateCity();
+    }
+});
+
+    </script>
+    
+  </body>
+</html>
