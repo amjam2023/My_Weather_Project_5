@@ -83,7 +83,6 @@
         align-items: center;
         gap: 10px;
         margin-top: 25px;
-        margin-left: 10px;
       }
 
       .col-2 {
@@ -104,6 +103,7 @@
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   </head>
   <body>
+    <div class="container">
     <div class="search-container">
       <input
         class="form-control"
@@ -112,8 +112,8 @@
       />
       <button id="searchButton">Search</button>
       <button id="localButton">Get Local Weather</button>
-
     </div>
+</div>
  
 </header>
 <h1 id="main-heading" class="hidden"></h1>
@@ -141,7 +141,7 @@
               <p>As of --:-- am/pm EDT</p>
             </div>
             <div class="col-10">
-                <p id="weatherDescription" class="hidden"></p>
+                <p id="weatherDescription" class="hidden">Description:</p>
                 <p id="weatherPrecipitation" class="hidden">Precipitation:</p>
                 <p id="weatherHumidity" class="hidden">Humidity:</p>
                 <p id="weatherWind" class="hidden">Wind:</p>
