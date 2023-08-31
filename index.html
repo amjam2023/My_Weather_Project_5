@@ -133,6 +133,7 @@
             <img
               src="images/mostly_cloudy.png"
               alt="Weather Icon"
+              id="icon"
               class="weather-icon"
             />
           </div>
@@ -207,6 +208,9 @@
     let weatherDescriptionElement = document.getElementById("weatherDescription");
     weatherDescriptionElement.textContent = response.data.weather[0].main;
     weatherDescriptionElement.classList.remove("hidden");
+    
+    let iconElement = document.querySelector("#icon");
+    iconElement.setAttribute("src", `https://openweathermap.org/img/wn/${response.data.weather[0].icon}@2x.png`); // Get icon from the API response
 
     document.getElementById("toCelsius").classList.add("hidden");
     document.getElementById("toFahrenheit").classList.remove("hidden");
