@@ -17,11 +17,16 @@
         cursor: pointer;
       }
 
+      #searchButton, 
+      #localButton {
+        box-shadow: 2px 3px 10px #888888;
+        transition: all 0.3s ease 0s;
+      }
+
       h5 {
         margin-left: 10px;
       }
-    
-           
+          
       .form-control {
         width: 300px;
         margin-top: 25px;
@@ -43,7 +48,16 @@
 
       .weather-icon {
         width: 100px;
-        background-color: bisque;
+      }
+
+      .weather-icon-day {
+        background-image: linear-gradient(to top, #cfd9df 0%, #e2ebf0 100%);
+        box-shadow: 5px 5px 15px 1px #888888;
+      }
+
+      .weather-icon-night {
+        background-image: linear-gradient(45deg, #8baaaa 0%, #ae8b9c 100%);
+        box-shadow: 5px 5px 15px 1px #888888;
       }
 
       .card-text {
@@ -100,7 +114,8 @@
         justify-content: center; /* Center items vertically */
         align-items: center; /* Center items horizontally */
         height: 100%;
-        background-color: bisque;
+        background-image: linear-gradient(to top, #d5d4d0 0%, #d5d4d0 1%, #eeeeec 31%, #efeeec 75%, #e9e9e7 100%);
+        box-shadow: 5px 5px 15px 1px #888888;
       }
 
       .weather-forecast img {
@@ -258,6 +273,16 @@
     let iconElement = document.querySelector("#icon");
     iconElement.setAttribute("src", `https://openweathermap.org/img/wn/${response.data.weather[0].icon}@2x.png`); // Get icon from the API response
 
+    // Check if the weather icon code ends with 'd' for day or 'n' for night
+    if(response.data.weather[0].icon.slice(-1) === 'd') {
+        iconElement.classList.add('weather-icon-day');
+        iconElement.classList.remove('weather-icon-night');
+    } else {
+        iconElement.classList.add('weather-icon-night');
+        iconElement.classList.remove('weather-icon-day');
+    }
+
+   // unit conversion 
     document.getElementById("toCelsius").classList.add("hidden");
     document.getElementById("toFahrenheit").classList.remove("hidden");
 
