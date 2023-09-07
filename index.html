@@ -21,7 +21,7 @@
         margin-left: 10px;
       }
     
-      
+           
       .form-control {
         width: 300px;
         margin-top: 25px;
@@ -43,6 +43,7 @@
 
       .weather-icon {
         width: 100px;
+        background-color: bisque;
       }
 
       .card-text {
@@ -94,6 +95,28 @@
         gap: 5px;
       }
 
+      .weather-forecast .col-2 {
+        flex-direction: column; /* Change from row to column direction */
+        justify-content: center; /* Center items vertically */
+        align-items: center; /* Center items horizontally */
+        height: 100%;
+        background-color: bisque;
+      }
+
+      .weather-forecast img {
+        margin-top: 15px; /* Provide some spacing between the items */
+        margin-bottom: 15px;
+      }
+
+      .weather-forecast-date {
+        font-size: 16px;
+        color: blue;
+      }
+
+      .weather-forecast-temperature-max {
+        font-weight: 500;
+      }
+
       .extra-large {
         margin-right: 10px;
       }
@@ -133,7 +156,7 @@
           </div>
           <div class="col-10">
             <img
-              src="images/mostly_cloudy.png"
+              src="https://www.freeiconspng.com/uploads/description-icon-round-question-mark-jpg-3.jpeg"
               alt="Weather Icon"
               id="icon"
               class="weather-icon"
@@ -152,6 +175,27 @@
           </div>
         </div>
       </div>
+      <div class="weather-forecast">
+    <div class="row">
+        <div class="col-2">
+            <div class="weather-forecast-date">
+            Thu
+            </div>
+            <div>
+                <img src="https://openclipart.org/image/800px/14710" 
+                alt="" 
+                width="36"
+                />
+            <div class="weather-forecast-temperatures">
+              <span class="weather-forecast-temperature-max">
+              18°</span>
+              <span class="weather-forecast-temperature-min">
+              12°
+              </span>
+               </div>
+        </div>
+    </div>
+    </div>
     </div>
 
     <hr />
