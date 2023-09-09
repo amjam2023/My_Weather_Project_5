@@ -57,12 +57,12 @@
       }
 
       .weather-icon-day {
-        background-image: linear-gradient(to top, #cfd9df 0%, #e2ebf0 100%);
+        background-image: linear-gradient(to top, #00c6fb 0%, #005bea 100%);
         box-shadow: 5px 5px 15px 1px #888888;
       }
 
       .weather-icon-night {
-        background-image: linear-gradient(45deg, #8baaaa 0%, #ae8b9c 100%);
+        background-image: linear-gradient(to right, #243949 0%, #517fa4 100%);
         box-shadow: 5px 5px 15px 1px #888888;
       }
 
@@ -138,6 +138,11 @@
         font-weight: 500;
       }
 
+      .col-2.forecast-day {
+        margin: 0 10px; /* Adding 10px margin to the left and right of each column */
+        
+      } 
+
       .extra-large {
         margin-right: 10px;
       }
@@ -196,25 +201,7 @@
           </div>
         </div>
       </div>
-      <div class="weather-forecast">
-    <div class="row">
-        <div class="col-2">
-            <div class="weather-forecast-date">
-            Thu
-            </div>
-            <div>
-                <img src="https://openclipart.org/image/800px/14710" 
-                alt="" 
-                width="36"
-                />
-            <div class="weather-forecast-temperatures">
-              <span class="weather-forecast-temperature-max">
-              18°</span>
-              <span class="weather-forecast-temperature-min">
-              12°
-              </span>
-               </div>
-        </div>
+      <div class="weather-forecast" id="forecast"></div>
     </div>
     </div>
     </div>
@@ -250,24 +237,56 @@
             getWeather(selectedCity);
         }
     
-        function getWeather(city) {
-    let apiKey = "eb9542c65e739e0fb25ade97c749e2aa";
-    let apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
-    axios.get(apiUrl).then(showWeather);
+        function displayForecast() {
+          let forecastElement = document.querySelector("#forecast");
+    
+          let forecastHTML = `<div class="row">`;
+          let days = ["Thu", "Fri", "Sat", "Sun", "Mon", "Tue", "Wed"];
+          days.forEach(function(day) {
+              forecastHTML += 
+              `
+              <div class="col-2 forecast-day">
+                  <div class="weather-forecast-date">${day}</div>
+                  <div>
+                      <img src="https://openclipart.org/image/800px/14710" 
+                      alt="" 
+                      width="36"
+                      />
+                  </div>
+                  <div class="weather-forecast-temperatures">
+                      <span class="weather-forecast-temperature-max">
+                      18°</span>
+                      <span class="weather-forecast-temperature-min">
+                      12°
+                      </span>
+                  </div>
+              </div>
+              `;
+          });
+          forecastHTML += `</div>`; // Closing the initial row div
+          forecastElement.innerHTML = forecastHTML; // Update the forecastElement's inner HTML
         }
+
+        function getWeather(city) {
+          let apiKey = "eb9542c65e739e0fb25ade97c749e2aa";
+          let apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+          axios.get(apiUrl).then(showWeather);
+          }
     
         function showWeather(response) {
-    let tempCelsius = Math.round(response.data.main.temp);
-    let tempFahrenheit = Math.round(tempCelsius * 9/5 + 32);
+        let tempCelsius = Math.round(response.data.main.temp);
+        let tempFahrenheit = Math.round(tempCelsius * 9/5 + 32);
 
-    document.querySelector("#selectedCity").innerHTML = response.data.name;
+        document.querySelector("#selectedCity").innerHTML = response.data.name;
 
-    let tempDisplay = document.getElementById("temperatureDisplay");
+        let tempDisplay = document.getElementById("temperatureDisplay");
     tempDisplay.textContent = `${tempCelsius}`;   // Set to Celsius by default
     tempDisplay.classList.remove("hidden");
 
     document.getElementById("toCelsius").classList.add("hidden");
     document.getElementById("toFahrenheit").classList.remove("hidden");
+
+    displayForecast();
 
     // Get the weather description from the API response
     let weatherDescription = response.data.weather[0].main;
